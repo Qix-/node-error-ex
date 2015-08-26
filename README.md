@@ -86,11 +86,11 @@ throw err;
 #### `errorEx.line(str)`
 Creates a stack line using a delimiter
 
-> This is a helper function. It is to be used in lieu of writing an anonymou
+> This is a helper function. It is to be used in lieu of writing an anonymous
 > function for `properties` values.
 
 - `str`: The string to create
-  - Use the delimiter `%s` to specify where in the string the value  should go
+  - Use the delimiter `%s` to specify where in the string the value should go
 
 ```javascript
 var errorEx = require('error-ex');
@@ -111,11 +111,11 @@ throw err;
 #### `errorEx.append(str)`
 Appends to the `error.message` string
 
-> This is a helper function. It is to be used in lieu of writing an anonymou
+> This is a helper function. It is to be used in lieu of writing an anonymous
 > function for `properties` values.
 
 - `str`: The string to append
-  - Use the delimiter `%s` to specify where in the string the value  should go
+  - Use the delimiter `%s` to specify where in the string the value should go
 
 ```javascript
 var errorEx = require('error-ex');
