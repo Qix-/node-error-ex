@@ -45,11 +45,15 @@ Creates a new ErrorEx error type
 - `properties`: if supplied, used as a key/value dictionary of properties to
   use when building up the stack message. Keys are property names that are
   looked up on the error message, and then passed to function values.
-	- Values are functions that are passed the property named by *key* as the
-    first argument and the `.stack`, split into an array of lines, as the
-		second argument
-	- Functions that return falsey values are simply skipped
-	- Stack is passed as to allow direct stack message modification, if needed
+	- `line`: if specified and is a function, return value is added as a stack
+    entry (error-ex will indent for you). Passed the property value given
+    the key.
+  - `stack`: if specified and is a function, passed the value of the property
+    using the key, and the raw stack lines as a second argument. Takes no
+    return value (but the stack can be modified directly).
+  - `message`: if specified and is a function, return value is used as new
+    `.message` value upon get. Passed the property value of the property named
+    by key, and the existing message is passed as the second argument.
 
 Returns a constructor (Function) that can be used just like the regular Error
 constructor.
@@ -64,11 +68,13 @@ var NamedError = errorEx('NamedError');
 // --
 
 var AdvancedError = errorEx('AdvancedError', {
-	foo: function (value, stack) {
-		if (value) {
-			return 'bar ' + value;
+	foo: {
+		line: function (value, stack) {
+			if (value) {
+				return 'bar ' + value;
+			}
+			return null;
 		}
-		return null;
 	}
 }
 
@@ -86,8 +92,8 @@ throw err;
 #### `errorEx.line(str)`
 Creates a stack line using a delimiter
 
-> This is a helper function. It is to be used in lieu of writing an anonymous
-> function for `properties` values.
+> This is a helper function. It is to be used in lieu of writing a value object
+> for `properties` values.
 
 - `str`: The string to create
   - Use the delimiter `%s` to specify where in the string the value should go
@@ -111,8 +117,8 @@ throw err;
 #### `errorEx.append(str)`
 Appends to the `error.message` string
 
-> This is a helper function. It is to be used in lieu of writing an anonymous
-> function for `properties` values.
+> This is a helper function. It is to be used in lieu of writing a value object
+> for `properties` values.
 
 - `str`: The string to append
   - Use the delimiter `%s` to specify where in the string the value should go

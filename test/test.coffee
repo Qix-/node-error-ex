@@ -21,13 +21,13 @@ it 'should create a new error type', ->
   testLine.should.equal 'TestError: herp derp'
 
 it 'should add a custom property line', ->
-  TestError = errorEx 'TestError', foo: -> 'bar'
+  TestError = errorEx 'TestError', foo:line: -> 'bar'
   err = new TestError 'herp derp'
   testLine = err.stack.toString().split(/[\r\n]+/g)[1]
   testLine.should.equal '    bar'
 
 it 'should allow properties', ->
-  TestError = errorEx 'TestError', foo: (v)-> "foo #{v}" if v
+  TestError = errorEx 'TestError', foo:line: (v)-> "foo #{v}" if v
   err = new TestError 'herp derp'
   testLine = err.stack.toString().split(/[\r\n]+/g)[1]
   testLine.substr(0, 3).should.not.equal 'foo'
@@ -36,7 +36,8 @@ it 'should allow properties', ->
   testLine.should.equal '    foo bar'
 
 it 'should allow direct editing of the stack', ->
-  TestError = errorEx 'TestError', foo: (v, stack)-> stack[0] += " #{v}" if v
+  TestError = errorEx 'TestError',
+    foo:stack: (v, stack)-> stack[0] += " #{v}" if v
   err = new TestError 'herp derp'
   err.foo = 'magerp'
   testLine = err.stack.toString().split(/[\r\n]+/g)[0]
@@ -44,7 +45,7 @@ it 'should allow direct editing of the stack', ->
 
 it 'should work on existing errors', ->
   originalErr = new Error 'herp derp'
-  TestError = errorEx 'TestError', foo: (v)-> "foo #{v}"
+  TestError = errorEx 'TestError', foo:line: (v)-> "foo #{v}"
   TestError.call originalErr
   originalErr.message.should.equal 'herp derp'
   originalErr.name.should.equal 'TestError'
@@ -59,6 +60,12 @@ describe 'helpers', ->
     err.fileName = '/a/b/c/foo.txt'
     testLine = err.stack.toString().split(/[\r\n]+/g)[0]
     testLine.should.equal 'TestError: error in /a/b/c/foo.txt'
+
+  it 'should append and use toString()', ->
+    TestError = errorEx 'TestError', fileName: errorEx.append 'in %s'
+    err = new TestError 'error'
+    err.fileName = '/a/b/c/foo.txt'
+    err.toString().should.equal 'TestError: error in /a/b/c/foo.txt'
 
   it 'should create a new line', ->
     TestError = errorEx 'TestError', fileName: errorEx.line 'in %s'

@@ -17,13 +17,33 @@ var errorEx = function errorEx(name, properties) {
 
 		Error.call(this, message);
 		Error.captureStackTrace(this, errorExError);
-		this.message = message;
 		this.name = name;
 
-		var descriptor = Object.getOwnPropertyDescriptor(this, 'stack');
-		var stackGetter = descriptor.get;
+		delete this.message;
 
-		descriptor.get = function () {
+		Object.defineProperty(this, 'message', {
+			configurable: true,
+			enumerable: false,
+			get: function () {
+				var newMessage = message;
+
+				for (var key in properties) {
+					if (properties.hasOwnProperty(key) && 'message' in properties[key]) {
+						newMessage = properties[key].message(this[key], newMessage);
+					}
+				}
+
+				return newMessage;
+			},
+			set: function (v) {
+				message = v;
+			}
+		});
+
+		var stackDescriptor = Object.getOwnPropertyDescriptor(this, 'stack');
+		var stackGetter = stackDescriptor.get;
+
+		stackDescriptor.get = function () {
 			var stack = stackGetter.call(this).split(/[\r\n]+/g);
 
 			var lineCount = 1;
@@ -33,16 +53,23 @@ var errorEx = function errorEx(name, properties) {
 				}
 
 				var modifier = properties[key];
-				var line = modifier(this[key], stack);
-				if (line) {
-					stack.splice(lineCount, 0, '    ' + line);
+
+				if ('line' in modifier) {
+					var line = modifier.line(this[key]);
+					if (line) {
+						stack.splice(lineCount, 0, '    ' + line);
+					}
+				}
+
+				if ('stack' in modifier) {
+					modifier.stack(this[key], stack);
 				}
 			}
 
 			return stack.join('\n');
 		};
 
-		Object.defineProperty(this, 'stack', descriptor);
+		Object.defineProperty(this, 'stack', stackDescriptor);
 	};
 
 	util.inherits(errorExError, Error);
@@ -51,19 +78,29 @@ var errorEx = function errorEx(name, properties) {
 };
 
 errorEx.append = function (str, def) {
-	return function (v, stack) {
-		v = v || def;
-		if (v) {
-			stack[0] += ' ' + str.replace('%s', v.toString());
+	return {
+		message: function (v, message) {
+			v = v || def;
+
+			if (v) {
+				message += ' ' + str.replace('%s', v.toString());
+			}
+
+			return message;
 		}
 	};
 };
 
 errorEx.line = function (str, def) {
-	return function (v) {
-		v = v || def;
-		if (v) {
-			return str.replace('%s', v.toString());
+	return {
+		line: function (v) {
+			v = v || def;
+
+			if (v) {
+				return str.replace('%s', v.toString());
+			}
+
+			return null;
 		}
 	};
 };
