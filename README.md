@@ -19,7 +19,7 @@ throw err; //-> JSONError: error
 
 To add a stack line:
 ```javascript
-var JSONError = errorEx('JSONError', {fileName: errorEx.line('in {}')});
+var JSONError = errorEx('JSONError', {fileName: errorEx.line('in %s')});
 
 var err = new JSONError('error')
 err.fileName = '/a/b/c/foo.json';
@@ -28,7 +28,7 @@ throw err; //-> (line 2)-> in /a/b/c/foo.json
 
 To append to the error message:
 ```javascript
-var JSONError = errorEx('JSONError', {fileName: errorEx.append('in {}')});
+var JSONError = errorEx('JSONError', {fileName: errorEx.append('in %s')});
 
 var err = new JSONError('error');
 err.fileName = '/a/b/c/foo.json';
