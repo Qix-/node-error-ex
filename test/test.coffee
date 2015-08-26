@@ -34,14 +34,14 @@ it 'should allow direct editing of the stack', ->
 
 describe 'helpers', ->
   it 'should append to the error string', ->
-    TestError = errorEx 'TestError', fileName: errorEx.append 'in {}'
+    TestError = errorEx 'TestError', fileName: errorEx.append 'in %s'
     err = new TestError 'error'
     err.fileName = '/a/b/c/foo.txt'
     testLine = err.stack.toString().split(/[\r\n]+/g)[0]
     testLine.should.equal 'TestError: error in /a/b/c/foo.txt'
 
   it 'should create a new line', ->
-    TestError = errorEx 'TestError', fileName: errorEx.line 'in {}'
+    TestError = errorEx 'TestError', fileName: errorEx.line 'in %s'
     err = new TestError 'error'
     err.fileName = '/a/b/c/foo.txt'
     testLine = err.stack.toString().split(/[\r\n]+/g)[1]

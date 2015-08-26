@@ -52,7 +52,7 @@ errorEx.append = function (str, def) {
 	return function (v, stack) {
 		v = v || def;
 		if (v) {
-			stack[0] += ' ' + str.replace('{}', v.toString());
+			stack[0] += ' ' + str.replace('%s', v.toString());
 		}
 	};
 };
@@ -61,7 +61,7 @@ errorEx.line = function (str, def) {
 	return function (v) {
 		v = v || def;
 		if (v) {
-			return str.replace('{}', v.toString());
+			return str.replace('%s', v.toString());
 		}
 	};
 };
