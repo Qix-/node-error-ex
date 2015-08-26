@@ -1,7 +1,7 @@
 {
   "name": "error-ex",
   "description": "Easy error subclassing and stack customization",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Qix (http://github.com/qix-)",
   "keywords": [
     "error",
