@@ -53,7 +53,8 @@ Creates a new ErrorEx error type
     return value (but the stack can be modified directly).
   - `message`: if specified and is a function, return value is used as new
     `.message` value upon get. Passed the property value of the property named
-    by key, and the existing message is passed as the second argument.
+    by key, and the existing message is passed as the second argument as an
+    array of lines (suitable for multi-line messages).
 
 Returns a constructor (Function) that can be used just like the regular Error
 constructor.

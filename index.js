@@ -25,15 +25,16 @@ var errorEx = function errorEx(name, properties) {
 			configurable: true,
 			enumerable: false,
 			get: function () {
-				var newMessage = message;
+				var newMessage = message.split(/\r?\n/g);
 
 				for (var key in properties) {
 					if (properties.hasOwnProperty(key) && 'message' in properties[key]) {
-						newMessage = properties[key].message(this[key], newMessage);
+						newMessage = properties[key].message(this[key], newMessage) ||
+							newMessage;
 					}
 				}
 
-				return newMessage;
+				return newMessage.join('\n');
 			},
 			set: function (v) {
 				message = v;
@@ -44,7 +45,7 @@ var errorEx = function errorEx(name, properties) {
 		var stackGetter = stackDescriptor.get;
 
 		stackDescriptor.get = function () {
-			var stack = stackGetter.call(this).split(/[\r\n]+/g);
+			var stack = stackGetter.call(this).split(/\r?\n+/g);
 
 			var lineCount = 1;
 			for (var key in properties) {
@@ -83,7 +84,7 @@ errorEx.append = function (str, def) {
 			v = v || def;
 
 			if (v) {
-				message += ' ' + str.replace('%s', v.toString());
+				message[0] += ' ' + str.replace('%s', v.toString());
 			}
 
 			return message;
