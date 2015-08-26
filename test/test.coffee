@@ -53,6 +53,12 @@ it 'should work on existing errors', ->
   testLine = originalErr.stack.toString().split(/\r?\n/g)[1]
   testLine.should.equal '    foo bar'
 
+it 'should take in an existing error to the constructor', ->
+  originalErr = new Error 'herp derp'
+  TestError = errorEx 'TestError'
+  newErr = new TestError originalErr
+  newErr.message.should.equal originalErr.message
+
 describe 'helpers', ->
   describe 'append', ->
     it 'should append to the error string', ->
