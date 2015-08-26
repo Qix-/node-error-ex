@@ -3,7 +3,7 @@
 var util = require('util');
 
 var errorEx = function errorEx(name, properties) {
-	if (name.constructor !== String) {
+	if (!name || name.constructor !== String) {
 		properties = name || {};
 		name = Error.name;
 	}

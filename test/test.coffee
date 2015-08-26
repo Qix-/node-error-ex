@@ -3,6 +3,14 @@ errorEx = require '../'
 
 Error.stackTraceLimit = Infinity
 
+it 'should create a default error type', ->
+  TestError = errorEx()
+  err = new TestError('herp derp')
+  err.should.be.instanceOf TestError
+  err.should.be.instanceOf Error
+  err.name.should.equal Error.name
+  err.message.should.equal 'herp derp'
+
 it 'should create a new error type', ->
   TestError = errorEx 'TestError'
   err = new TestError('herp derp')
