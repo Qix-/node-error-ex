@@ -48,6 +48,8 @@ Creates a new ErrorEx error type
 	- Values are functions that are passed the property named by *key* as the
     first argument and the `.stack`, split into an array of lines, as the
 		second argument
+	- Functions that return falsey values are simply skipped
+	- Stack is passed as to allow direct stack message modification, if needed
 
 Returns a constructor (Function) that can be used just like the regular Error
 constructor.
