@@ -129,6 +129,7 @@ throw err;
 /*
 	SyntaxError: improper indentation in /a/b/c/d/foo.js
 	    at tryReadme() (readme.js:7:1)
+*/
 ```
 
 ## License
