@@ -16,7 +16,7 @@ var errorEx = function errorEx(name, properties) {
 		message = message || this.message;
 
 		Error.call(this, message);
-		Error.captureStackTrace(this, this.constructor);
+		Error.captureStackTrace(this, errorExError);
 		this.message = message;
 		this.name = name;
 
