@@ -6,6 +6,8 @@ Error.stackTraceLimit = Infinity
 it 'should create a new error type', ->
   TestError = errorEx 'TestError'
   err = new TestError('herp derp')
+  err.should.be.instanceOf TestError
+  err.should.be.instanceOf Error
   err.name.should.equal 'TestError'
   testLine = err.stack.toString().split(/[\r\n]+/g)[0]
   testLine.should.equal 'TestError: herp derp'
