@@ -5,7 +5,7 @@ Error.stackTraceLimit = Infinity
 
 it 'should create a default error type', ->
   TestError = errorEx()
-  err = new TestError('herp derp')
+  err = new TestError 'herp derp'
   err.should.be.instanceOf TestError
   err.should.be.instanceOf Error
   err.name.should.equal Error.name
@@ -13,7 +13,7 @@ it 'should create a default error type', ->
 
 it 'should create a new error type', ->
   TestError = errorEx 'TestError'
-  err = new TestError('herp derp')
+  err = new TestError 'herp derp'
   err.should.be.instanceOf TestError
   err.should.be.instanceOf Error
   err.name.should.equal 'TestError'
@@ -22,13 +22,13 @@ it 'should create a new error type', ->
 
 it 'should add a custom property line', ->
   TestError = errorEx 'TestError', foo: -> 'bar'
-  err = new TestError('herp derp')
+  err = new TestError 'herp derp'
   testLine = err.stack.toString().split(/[\r\n]+/g)[1]
   testLine.should.equal '    bar'
 
 it 'should allow properties', ->
   TestError = errorEx 'TestError', foo: (v)-> "foo #{v}" if v
-  err = new TestError('herp derp')
+  err = new TestError 'herp derp'
   testLine = err.stack.toString().split(/[\r\n]+/g)[1]
   testLine.substr(0, 3).should.not.equal 'foo'
   err.foo = 'bar'
@@ -37,13 +37,13 @@ it 'should allow properties', ->
 
 it 'should allow direct editing of the stack', ->
   TestError = errorEx 'TestError', foo: (v, stack)-> stack[0] += " #{v}" if v
-  err = new TestError('herp derp')
+  err = new TestError 'herp derp'
   err.foo = 'magerp'
   testLine = err.stack.toString().split(/[\r\n]+/g)[0]
   testLine.should.equal 'TestError: herp derp magerp'
 
 it 'should work on existing errors', ->
-  originalErr = new Error('herp derp')
+  originalErr = new Error 'herp derp'
   TestError = errorEx 'TestError', foo: (v)-> "foo #{v}"
   TestError.call originalErr
   originalErr.message.should.equal 'herp derp'
