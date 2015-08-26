@@ -42,6 +42,16 @@ it 'should allow direct editing of the stack', ->
   testLine = err.stack.toString().split(/[\r\n]+/g)[0]
   testLine.should.equal 'TestError: herp derp magerp'
 
+it 'should work on existing errors', ->
+  originalErr = new Error('herp derp')
+  TestError = errorEx 'TestError', foo: (v)-> "foo #{v}"
+  TestError.call originalErr
+  originalErr.message.should.equal 'herp derp'
+  originalErr.name.should.equal 'TestError'
+  originalErr.foo = 'bar'
+  testLine = originalErr.stack.toString().split(/[\r\n]+/g)[1]
+  testLine.should.equal '    foo bar'
+
 describe 'helpers', ->
   it 'should append to the error string', ->
     TestError = errorEx 'TestError', fileName: errorEx.append 'in %s'

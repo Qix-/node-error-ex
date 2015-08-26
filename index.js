@@ -13,6 +13,8 @@ var errorEx = function errorEx(name, properties) {
 			return new ErrorEXError(message);
 		}
 
+		message = message || this.message;
+
 		Error.call(this, message);
 		Error.captureStackTrace(this, this.constructor);
 		this.message = message;
