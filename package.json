@@ -6,8 +6,10 @@
   "keywords": [
     "error",
     "errors",
+    "extend",
     "extending",
     "extension",
+    "subclass",
     "stack",
     "custom"
   ],
@@ -16,16 +18,16 @@
     "pretest": "xo",
     "test": "mocha --compilers coffee:coffee-script/register"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/qix-/node-error-ex.git"
-  },
+  "repository": "qix-/node-error-ex",
+  "files": [
+    "index.js"
+  ],
   "devDependencies": {
     "coffee-script": "^1.9.3",
     "coveralls": "^2.11.2",
     "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
     "should": "^7.0.1",
-    "xo": "^0.6.1"
+    "xo": "^0.7.1"
   }
 }
