@@ -79,6 +79,12 @@ it 'should allow the editing of the message (multiple lines)', ->
   originalErr.foo = '1234'
   originalErr.message.should.equal 'hello\nfoobar 1234'
 
+it 'should allow the editing of the message (append original)', ->
+  originalErr = new Error 'herp derp'
+  TestError = errorEx 'TestError', foo:message: (v, message)-> message.concat ['hello, there']
+  TestError.call originalErr
+  originalErr.message.should.equal 'herp derp\nhello, there'
+
 describe 'helpers', ->
   describe 'append', ->
     it 'should append to the error string', ->
