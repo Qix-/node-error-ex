@@ -21,6 +21,13 @@
     "pretest": "xo",
     "test": "mocha --compilers coffee:coffee-script/register"
   },
+  "xo": {
+    "rules": {
+      "operator-linebreak": [
+        0
+      ]
+    }
+  },
   "repository": "qix-/node-error-ex",
   "files": [
     "index.js"
@@ -32,5 +39,8 @@
     "mocha": "^2.2.5",
     "should": "^7.0.1",
     "xo": "^0.7.1"
+  },
+  "dependencies": {
+    "is-arrayish": "^0.2.1"
   }
 }

@@ -59,6 +59,26 @@ it 'should take in an existing error to the constructor', ->
   newErr = new TestError originalErr
   newErr.message.should.equal originalErr.message
 
+it 'should allow the editing of the message', ->
+  originalErr = new Error 'herp derp'
+  TestError = errorEx 'TestError', foo:message: ()-> 'foobar'
+  TestError.call originalErr
+  originalErr.message.should.equal 'foobar'
+
+it 'should allow the editing of the message (with value)', ->
+  originalErr = new Error 'herp derp'
+  TestError = errorEx 'TestError', foo:message: (v)-> "foobar #{v}"
+  TestError.call originalErr
+  originalErr.foo = '1234'
+  originalErr.message.should.equal 'foobar 1234'
+
+it 'should allow the editing of the message (multiple lines)', ->
+  originalErr = new Error 'herp derp'
+  TestError = errorEx 'TestError', foo:message: (v)-> ['hello', "foobar #{v}"]
+  TestError.call originalErr
+  originalErr.foo = '1234'
+  originalErr.message.should.equal 'hello\nfoobar 1234'
+
 describe 'helpers', ->
   describe 'append', ->
     it 'should append to the error string', ->
