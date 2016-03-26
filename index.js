@@ -1,7 +1,6 @@
 'use strict';
 
 var util = require('util');
-var isArrayish = require('is-arrayish');
 
 var errorEx = function errorEx(name, properties) {
 	if (!name || name.constructor !== String) {
@@ -28,19 +27,8 @@ var errorEx = function errorEx(name, properties) {
 			configurable: true,
 			enumerable: false,
 			get: function () {
-				var newMessage = message.split(/\r?\n/g);
-
-				for (var key in properties) {
-					if (properties.hasOwnProperty(key) && 'message' in properties[key]) {
-						newMessage = properties[key].message(this[key], newMessage) ||
-							newMessage;
-						if (!isArrayish(newMessage)) {
-							newMessage = [newMessage];
-						}
-					}
-				}
-
-				return newMessage.join('\n');
+				var customMsg = properties.message;
+				return (typeof customMsg === 'function' ? customMsg(message) : customMsg) || message;
 			},
 			set: function (v) {
 				message = v;
