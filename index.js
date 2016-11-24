@@ -49,9 +49,14 @@ var errorEx = function errorEx(name, properties) {
 
 		var stackDescriptor = Object.getOwnPropertyDescriptor(this, 'stack');
 		var stackGetter = stackDescriptor.get;
+		var stackValue = stackDescriptor.value;
+		delete stackDescriptor.value;
+		delete stackDescriptor.writable;
 
 		stackDescriptor.get = function () {
-			var stack = stackGetter.call(this).split(/\r?\n+/g);
+			var stack = (stackGetter)
+				? stackGetter.call(this).split(/\r?\n+/g)
+				: stackValue.split(/\r?\n+/g);
 
 			var lineCount = 1;
 			for (var key in properties) {
