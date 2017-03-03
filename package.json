@@ -3,7 +3,7 @@
   "description": "Easy error subclassing and stack customization",
   "version": "1.3.0",
   "maintainers": [
-    "JD Ballard <i.am.qix@gmail.com> (github.com/qix-)",
+    "Josh Junon <i.am.qix@gmail.com> (github.com/qix-)",
     "Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)"
   ],
   "keywords": [
