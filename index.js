@@ -20,9 +20,8 @@ var errorEx = function errorEx(name, properties) {
 
 		Error.call(this, message);
 		Error.captureStackTrace(this, errorExError);
-		this.name = name;
 
-		delete this.message;
+		this.name = name;
 
 		Object.defineProperty(this, 'message', {
 			configurable: true,
@@ -31,9 +30,14 @@ var errorEx = function errorEx(name, properties) {
 				var newMessage = message.split(/\r?\n/g);
 
 				for (var key in properties) {
-					if (properties.hasOwnProperty(key) && 'message' in properties[key]) {
-						newMessage = properties[key].message(this[key], newMessage) ||
-							newMessage;
+					if (!properties.hasOwnProperty(key)) {
+						continue;
+					}
+
+					var modifier = properties[key];
+
+					if ('message' in modifier) {
+						newMessage = modifier.message(this[key], newMessage) || newMessage;
 						if (!isArrayish(newMessage)) {
 							newMessage = [newMessage];
 						}
@@ -58,6 +62,10 @@ var errorEx = function errorEx(name, properties) {
 				? stackGetter.call(this).split(/\r?\n+/g)
 				: stackValue.split(/\r?\n+/g);
 
+			// starting in Node 7, the stack builder caches the message.
+			// just replace it.
+			stack[0] = this.name + ': ' + this.message;
+
 			var lineCount = 1;
 			for (var key in properties) {
 				if (!properties.hasOwnProperty(key)) {
@@ -69,7 +77,7 @@ var errorEx = function errorEx(name, properties) {
 				if ('line' in modifier) {
 					var line = modifier.line(this[key]);
 					if (line) {
-						stack.splice(lineCount, 0, '    ' + line);
+						stack.splice(lineCount++, 0, '    ' + line);
 					}
 				}
 
@@ -84,7 +92,12 @@ var errorEx = function errorEx(name, properties) {
 		Object.defineProperty(this, 'stack', stackDescriptor);
 	};
 
-	util.inherits(errorExError, Error);
+	if (Object.setPrototypeOf) {
+		Object.setPrototypeOf(errorExError.prototype, Error.prototype);
+		Object.setPrototypeOf(errorExError, Error);
+	} else {
+		util.inherits(errorExError, Error);
+	}
 
 	return errorExError;
 };
