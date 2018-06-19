@@ -124,3 +124,31 @@ describe 'helpers', ->
       err.fileName = '/a/b/c/foo.txt'
       testLine = err.stack.toString().split(/\r?\n/g)[1]
       testLine.should.equal '    in /a/b/c/foo.txt'
+
+describe 'bluebird support', ->
+  it 'should pass the bluebird stack write test', ->
+    bluebirdPropertyWritable = (obj, prop)->
+        descriptor = Object.getOwnPropertyDescriptor(obj, prop)
+        return !!(!descriptor || descriptor.writable || descriptor.set)
+
+    TestError = errorEx 'TestError', fileName: errorEx.line 'in %s'
+    err = new TestError 'error'
+    err_native = new Error 'hello'
+
+    (bluebirdPropertyWritable err_native, 'stack').should.be.ok()
+    (bluebirdPropertyWritable err, 'stack').should.be.ok()
+
+  it 'should allow the stack to be set while preserving custom properties', ->
+    TestError = errorEx 'TestError', fileName: errorEx.line 'in %s'
+
+    err = new TestError 'error'
+    err.fileName = '/a/b/c/foo.txt'
+    testLine = err.stack.toString().split(/\r?\n/g)[1]
+    testLine.should.equal '    in /a/b/c/foo.txt'
+
+    err.stack = 'TestError: overridden error\n    at null:1:1'
+    err.stack.toString().should.equal 'TestError: overridden error\n    in /a/b/c/foo.txt\n    at null:1:1'
+
+    err.stack = null
+    testLine = err.stack.toString().split(/\r?\n/g)[1]
+    testLine.should.equal '    in /a/b/c/foo.txt'
