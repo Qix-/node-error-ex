@@ -1,7 +1,6 @@
 'use strict';
 
 var util = require('util');
-var isArrayish = require('is-arrayish');
 
 var errorEx = function errorEx(name, properties) {
 	if (!name || name.constructor !== String) {
@@ -38,7 +37,7 @@ var errorEx = function errorEx(name, properties) {
 
 					if ('message' in modifier) {
 						newMessage = modifier.message(this[key], newMessage) || newMessage;
-						if (!isArrayish(newMessage)) {
+						if (!Array.isArray(newMessage)) {
 							newMessage = [newMessage];
 						}
 					}
